@@ -6,7 +6,10 @@ namespace src
 {
     public class TileMap : MonoBehaviour
     {
-
+        public enum ObjectType
+        {
+            NULL, WALL, ROCK, PORTAL, PLAYER
+        }
 
         public static float TILE_SIZE = 1.0f; //calculated for ~16px size tiles
 
@@ -29,7 +32,6 @@ namespace src
             int centerX = width / 2;
             int centerY = height / 2;
             Transform[] children = GetComponentsInChildren<Transform>();
-            Debug.Log(children.Length);
             foreach (Transform child in children)
             {
                 if (child == transform)
@@ -67,13 +69,13 @@ namespace src
         {
         }
 
-        public bool IsObjectAt(int x, int y)
+        public ObjectType IsObjectAt(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= width || y >= height)
+            if (x < 0 || y < 0 || x >= width || y >= height || grid[x, y] == null)
             {
-                return true;
+                return ObjectType.NULL;
             }
-            return grid[x, y] != null;
+            return grid[x, y].GetComponent<GridObject>().GetGridObjType();
         }
 
         public int Raycast(int startx, int starty, int dir)
@@ -104,7 +106,7 @@ namespace src
             }
             int x = startx + delx, y = starty + dely;
             int steps = 1;
-            while (!IsObjectAt(x, y))
+            while (IsObjectAt(x, y) != ObjectType.NULL)
             {
                 x += delx;
                 y += dely;

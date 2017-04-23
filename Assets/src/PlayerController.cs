@@ -18,6 +18,10 @@ namespace src {
 
         }
 
+        public TileMap.ObjectType GetGridObjType()
+        {
+            return TileMap.ObjectType.PLAYER;
+        }
 
         public void SetLocation(int x, int y)
         {
@@ -25,27 +29,44 @@ namespace src {
             gridY = y;
         }
 
+
+        bool IsPassable(int x, int y)
+        {
+            return map.IsObjectAt(x, y) != TileMap.ObjectType.WALL && map.IsObjectAt(x, y) != TileMap.ObjectType.ROCK;
+        }
+
         // Update is called once per frame
         void Update() {
             int oldX = gridX;
             int oldY = gridY;
-            if (Input.GetKeyDown(KeyCode.UpArrow) && gridY < map.height - 1 && !map.IsObjectAt(gridX, gridY + 1))
+            if (Input.GetKeyDown(KeyCode.UpArrow) && gridY < map.height - 1 && IsPassable(gridX, gridY + 1))
             {
                 Move(0);
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow) && gridY > 0 && !map.IsObjectAt(gridX, gridY - 1))
+            if (Input.GetKeyDown(KeyCode.DownArrow) && gridY > 0 && IsPassable(gridX, gridY - 1))
             {
                 Move(2);
             }
-            if (Input.GetKeyDown(KeyCode.LeftArrow) && gridX > 0 && !map.IsObjectAt(gridX - 1, gridY))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && gridX > 0 && IsPassable(gridX - 1, gridY))
             {
                 Move(3);
             }
-            if (Input.GetKeyDown(KeyCode.RightArrow) && gridX < map.width - 1 && !map.IsObjectAt(gridX + 1, gridY))
+            if (Input.GetKeyDown(KeyCode.RightArrow) && gridX < map.width - 1 && IsPassable(gridX + 1, gridY))
             {
                 Move(1);
             }
             UpdateGridLocation(oldX, oldY);
+            CheckAtGoal();
+        }
+
+        void CheckAtGoal()
+        {
+            Debug.Log(map.IsObjectAt(gridX, gridY));
+            if (map.IsObjectAt(gridX, gridY) == TileMap.ObjectType.PORTAL)
+            {
+                Debug.Log("reached goal");
+                GetComponentInParent<LevelManager>().GoToNextLevel();
+            }
         }
 
         void TurnLeft()
@@ -91,7 +112,6 @@ namespace src {
         void UpdateGridLocation(int oldX, int oldY)
         {
             map.grid[oldX, oldY] = null;
-            map.grid[gridX, gridY] = gameObject;
         }
     }
 }

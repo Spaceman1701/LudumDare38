@@ -8,5 +8,6 @@ namespace src
     public interface GridObject
     {
         void SetLocation(int x, int y);
+        TileMap.ObjectType GetGridObjType();
     }
 }
