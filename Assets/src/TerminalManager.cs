@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class TerminalManager : MonoBehaviour {
+
+    public Text info;
 
 	// Use this for initialization
 	void Start () {
@@ -18,7 +21,15 @@ public class TerminalManager : MonoBehaviour {
         Debug.Log(command);
         if (command == "run")
         {
-            Debug.Log("Run Command Recieved");
+            info.text = "INFO: Running code...";
+        }
+        if (command == "reset")
+        {
+            info.text = "INFO: Reseting simulation...";
+        }
+        if (command == "compile")
+        {
+            info.text = "INFO: Compiling code...";
         }
     }
 }
