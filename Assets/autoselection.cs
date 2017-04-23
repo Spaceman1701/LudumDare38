@@ -6,11 +6,11 @@ using UnityEngine.EventSystems;
 public class autoselection : MonoBehaviour {
 
     GameObject lastSelect;
+    public bool overrideSelect = false;
 
 	// Use this for initialization
 	void Start () {
         InputField field = GetComponent<InputField>();
-
         field.Select();
 
         lastSelect = gameObject;
@@ -18,12 +18,14 @@ public class autoselection : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (EventSystem.current.currentSelectedGameObject == null)
+
+    // Update is called once per frame
+    void Update () {
+        if (EventSystem.current.currentSelectedGameObject == null || overrideSelect)
         {
+            overrideSelect = false;
             EventSystem.current.SetSelectedGameObject(lastSelect);
+            InputField field = GetComponent<InputField>();
         }
         else
         {

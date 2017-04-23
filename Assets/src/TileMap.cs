@@ -32,7 +32,6 @@ namespace src
             Debug.Log(children.Length);
             foreach (Transform child in children)
             {
-                Debug.Log(child.gameObject.name);
                 if (child == transform)
                 {
                     continue;
@@ -66,16 +65,6 @@ namespace src
         // Update is called once per frame
         void Update()
         {
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    if (IsObjectAt(x, y))
-                    {
-                        Debug.Log(x + ", " + y + ": " + grid[x, y].name);
-                    }
-                }
-            }
         }
 
         public bool IsObjectAt(int x, int y)
