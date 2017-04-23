@@ -18,7 +18,6 @@ namespace src
 
         public void SetLocation(int x, int y)
         {
-            Debug.Log(GetGridObjType());
         }
     }
 }

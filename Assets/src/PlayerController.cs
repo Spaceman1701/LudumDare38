@@ -61,10 +61,8 @@ namespace src {
 
         void CheckAtGoal()
         {
-            Debug.Log(map.IsObjectAt(gridX, gridY));
             if (map.IsObjectAt(gridX, gridY) == TileMap.ObjectType.PORTAL)
             {
-                Debug.Log("reached goal");
                 GetComponentInParent<LevelManager>().GoToNextLevel();
             }
         }
