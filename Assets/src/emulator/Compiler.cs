@@ -15,6 +15,15 @@ namespace src.emulator
             public string paramOne;
             public string paramTwo;
 
+
+            public TokenizedLine()
+            {
+                label = null;
+                inst = Instruction.Type.NONE;
+                paramOne = null;
+                paramTwo = null;
+            }
+
             public override string ToString()
             {
                 return "LBL: " + label + ", INST: " + inst.ToString() + ", P1: " + paramOne + ", P2: " + paramTwo; 
@@ -45,7 +54,98 @@ namespace src.emulator
             {
                 Debug.Log(l.ToString());
             }
-            return null;
+
+
+            List<Instruction> instructions = new List<Instruction>();
+
+
+            Dictionary<string, int> labels = new Dictionary<string, int>();
+            Dictionary<string, byte> constants = new Dictionary<string, byte>();
+
+            foreach (string name in p.constants.Keys)
+            {
+                byte value = Parse.Byte(p.constants[name]);
+                constants[name] = value;
+            }
+            foreach (string name in p.arrays.Keys)
+            {
+                byte value = (byte)p.arrays[name];
+                constants[name] = value;
+            }
+
+            foreach (TokenizedLine line in p.instructions)
+            {
+                Instruction.Parameter p1 = null, p2 = null;
+                if (line.paramOne != null)
+                {
+                    p1 = ParseParameter(line.paramOne);
+                }
+                if (line.paramTwo != null)
+                {
+                    p2 = ParseParameter(line.paramTwo);
+                }
+
+                Instruction i = new Instruction(line.inst, p1, p2);
+                instructions.Add(i);
+
+                if (line.label != null)
+                {
+                    labels[line.label] = instructions.Count() - 1; 
+                }
+            }
+
+
+            return new Program(constants, labels, instructions);
+        }
+
+        public static string ProcessMemoryPtr(string ptr)
+        {
+            ptr = ptr.Replace("+", "|+|").Replace("-", "|-|");
+            string output = "";
+            string[] exp = ptr.Split('|');
+            Stack<string> opStack = new Stack<string>();
+            for (int i = 0; i < exp.Length; i++)
+            {
+                string token = exp[i];
+                if (token == "+" || token == "-")
+                {
+                    while (opStack.Count > 0)
+                    {
+                        output += opStack.Pop() + "|";
+                    }
+                    opStack.Push(token);
+                } else
+                {
+                    output += token + "|";
+                }
+            }
+
+            while (opStack.Count > 0)
+            {
+                output += opStack.Pop();
+                if (opStack.Count > 0)
+                {
+                    output += "|";
+                }
+            }
+            return output;
+        }
+
+        private static Instruction.Parameter ParseParameter(string data)
+        {
+            if (data.StartsWith("["))
+            {
+                return new Instruction.Parameter(Instruction.ParamType.MEM, ProcessMemoryPtr(data.Replace("[", "").Replace("]", "")));
+            } else if (data.StartsWith("%"))
+            {
+                return new Instruction.Parameter(Instruction.ParamType.REG, data.Replace("%", ""));
+            } else if (data.StartsWith("$"))
+            {
+                return new Instruction.Parameter(Instruction.ParamType.NUM, data.Replace("$", ""));
+            } else
+            {
+                return new Instruction.Parameter(Instruction.ParamType.LBL, data);
+            }
         }
 
         private static TokenizedProgram PreProcess(string raw)
@@ -57,7 +157,7 @@ namespace src.emulator
             Dictionary<string, int> arrays = new Dictionary<string, int>();
             IList<TokenizedLine> tokenizedLines = new List<TokenizedLine>();
 
-            for (int i = 0; i < lines.Length; i++) {
+            for (int i = 0; i < lines.Length; i++) { //sanatize input some
                 string line = lines[i];
                 line = line.Replace(", ", ",");
                 line = line.Replace(" ,", ",");
@@ -71,10 +171,14 @@ namespace src.emulator
                 line = line.Replace(": ", ":");
                 line = line.Replace(":", ":~");
 
+                line = line.Replace("[ ", "[");
+                line = line.Replace(" ]", "]");
+
                 line = line.Trim();
                 lines[i] = line;
             }
 
+            int heapHead = 0;
             for (int i = 0; i < lines.Length; i++)
             {
                 string currentLine = lines[i];
@@ -91,7 +195,21 @@ namespace src.emulator
 
                 if (dataSection)
                 {
-
+                    if (currentLine.Trim() != "")
+                    {
+                        string[] lineData = currentLine.Split(' ');
+                        string name = lineData[0];
+                        if (lineData[1].Contains('['))
+                        {
+                            string number = lineData[1].Replace("[", "").Replace("]", "");
+                            int value = int.Parse(number);
+                            arrays[name] = heapHead;
+                            heapHead += value;
+                        } else
+                        {
+                            constants[name] = lineData[1].Trim();
+                        }
+                    }
                 } else
                 {
                     if (currentLine.Trim() != "")
@@ -115,6 +233,7 @@ namespace src.emulator
                 instLine = lblSep[1];
                 if (instLine.Trim() == "~")
                 {
+                    tl.inst = Instruction.Type.NOP;
                     return tl;
                 }
                 instLine = instLine.Replace("~", "");
@@ -125,7 +244,7 @@ namespace src.emulator
 
             string[] lineData = instLine.Split(' ');
 
-            Instruction.Type instType = InstructionTypeFromString(lineData[0]);
+            Instruction.Type instType = Instruction.TypeFromString(lineData[0]);
             tl.inst = instType;
 
             if (lineData.Length > 1)
@@ -139,18 +258,6 @@ namespace src.emulator
             }
 
             return tl;
-        }
-
-        private static Instruction.Type InstructionTypeFromString(string s)
-        {
-            foreach (Instruction.Type ty in Enum.GetValues(typeof(Instruction.Type)))
-            {
-                if (s.Trim().ToUpper() == ty.ToString().ToUpper())
-                {
-                    return ty;
-                }
-            }
-            return Instruction.Type.NONE;
         }
 
         private static bool HasLabel(string line)

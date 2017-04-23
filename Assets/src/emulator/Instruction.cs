@@ -14,6 +14,7 @@ namespace src.emulator
             [Params("R,M R,M,N")] ADD,
             [Params("R,M R,M,N")] SUB,
             [Params("R,M R,M,N")] MUL,
+            [Params("R,M M")] LEA,
 
             [Params("R,M,N R,M,N")] CMP,
 
@@ -32,27 +33,31 @@ namespace src.emulator
             [Params("R,M R,M,N")] XOR,
             [Params("R,M R,M,N")] OR,
             [Params("R,M R,M,N")] AND,
-            [Params("R,M R,M,N")] NOT,
+            [Params("R,M")] NOT,
 
             [Params("R,M")] INC,
             [Params("R,M")] DEC,
 
-
-            [Params("R,M M")] LEA,
-
             //Halting instuctions
-            [Params("R,M,N")] LOC,
-            [Params("")] SHA,
-            [Params("")] TUL,
-            [Params("")] TUR,
-            [Params("")] HLT,
+            [Halt] [Params("R,M,N")] LOC,
+            [Halt] [Params("R,M")] SHA,
+            [Halt] [Params("")] TUL,
+            [Halt] [Params("")] TUR,
+            [Halt] [Params("")] HLT,
 
-            [Params("")] NONE
+            [Params("")] NOP,
+
+            [Params("")] NONE,
         }
 
         public enum ParamType
         {
             REG, MEM, NUM, LBL, NONE
+        }
+
+        private class Halt : Attribute
+        {
+
         }
 
         public class Params : Attribute
@@ -122,8 +127,86 @@ namespace src.emulator
             }
         }
 
+        public class Parameter
+        {
+            public ParamType type;
+            public string data;
 
+            public Parameter(ParamType type, string data)
+            {
+                this.type = type;
+                this.data = data;
+            }
+        }
 
+        private Type type;
+        private Parameter paramOne;
+        private Parameter paramTwo;
+
+        public Instruction(Type type, Parameter p1, Parameter p2)
+        {
+            this.type = type;
+            this.paramOne = p1;
+            this.paramTwo = p2;
+        }
+
+        public Instruction.Type OpType
+        {
+            get
+            {
+                return type;
+            }
+        }
+
+        public Parameter[] GetParameters()
+        {
+            return new Parameter[] { paramOne, paramTwo };
+        }
+
+        public Parameter ParamOne
+        {
+            get
+            {
+                return paramOne;
+            }
+        }
+
+        public Parameter ParamTwo
+        {
+            get
+            {
+                return paramTwo;
+            }
+        }
+
+        public int GetNumParams()
+        {
+            if (paramOne != null && paramTwo != null)
+            {
+                return 2;
+            } else if (paramOne == null && paramTwo == null)
+            {
+                return 0;
+            }
+            return 1;
+        }
+
+        public bool ShouldHalt()
+        {
+            return Attribute.GetCustomAttribute(InsturctionTypeExtension.ForValue(type), typeof(Halt)) != null;
+        }
+
+        public static Type TypeFromString(string s)
+        {
+            foreach (Type ty in Enum.GetValues(typeof(Type)))
+            {
+                if (s.Trim().ToUpper() == ty.ToString().ToUpper())
+                {
+                    return ty;
+                }
+            }
+            return Type.NONE;
+        }
     }
 
     public static class InsturctionTypeExtension
@@ -150,7 +233,7 @@ namespace src.emulator
             return (Instruction.Params)Attribute.GetCustomAttribute(ForValue(it), typeof(Instruction.Params));
         }
 
-        private static MemberInfo ForValue(Instruction.Type p)
+        public static MemberInfo ForValue(Instruction.Type p)
         {
             return typeof(Instruction.Type).GetField(Enum.GetName(typeof(Instruction.Type), p));
         }
