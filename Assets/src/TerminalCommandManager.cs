@@ -16,7 +16,7 @@ public class TerminalCommandManager : MonoBehaviour {
             {
                 last = command;
                 infield.text = "";
-                GetComponentInParent<TerminalManager>().InputCommand(command);
+                GetComponentInParent<TerminalManager>().InputCommand(command.ToLower());
             }
         }
     }

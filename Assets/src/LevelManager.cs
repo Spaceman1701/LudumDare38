@@ -6,6 +6,9 @@ public class LevelManager : MonoBehaviour {
 
     public Level firstLevel;
 
+    public Level mainMenu;
+    public Level helpScreen;
+
     public Level[] levels;
 
     public Level currentLevel;
@@ -40,5 +43,15 @@ public class LevelManager : MonoBehaviour {
     public void GoToNextLevel()
     {
         GoToLevel(currentLevel.nextLevel);
+    }
+
+    public void GoToMainMenu()
+    {
+        GoToLevel(mainMenu);
+    }
+
+    public void GoToHelp()
+    {
+        GoToLevel(helpScreen);
     }
 }

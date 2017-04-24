@@ -41,6 +41,18 @@ public class TerminalManager : MonoBehaviour {
             info.text = "INFO: Exiting...";
             Application.Quit();
         }
+        if (command == "help")
+        {
+            GetComponentInParent<LevelManager>().GoToHelp();
+        }
+        if (command == "please god help")
+        {
+            info.text = "INFO: Not even God can help you.";
+        }
+        if (command == "menu")
+        {
+            GetComponentInParent<LevelManager>().GoToMainMenu();
+        }
     }
 
     public void RunCode()
@@ -53,7 +65,7 @@ public class TerminalManager : MonoBehaviour {
 
     public void ShowRuntimeError()
     {
-        info.text = "INFO: Error in program!";
+        info.text = "ERROR: RUNTIME ERROR!";
     }
 
     public void ShowCodeHalt()
