@@ -203,6 +203,7 @@ namespace src {
             if (map.IsObjectAt(gridX, gridY) == TileMap.ObjectType.PORTAL)
             {
                 Debug.Log("At the fucking goal");
+                GetComponentInParent<Level>().ResetLevel();
                 GetComponentInParent<LevelManager>().GoToNextLevel();
             }
         }
