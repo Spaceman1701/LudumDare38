@@ -7,7 +7,7 @@ public class MenuControl : MonoBehaviour {
     public Text[] options;
     public Level[] levels;
 
-    public int selected;
+    public uint selected;
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +24,7 @@ public class MenuControl : MonoBehaviour {
             selected += 1;
         }
 
-        selected %= options.Length;
+        selected %= (uint)options.Length;
 
         foreach (Text t in options)
         {
