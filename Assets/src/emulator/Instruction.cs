@@ -72,7 +72,7 @@ namespace src.emulator
                 {
                     string[] sep = info.Split(' ');
 
-                    string[] firstParam = sep[1].Split(',');
+                    string[] firstParam = sep[0].Split(',');
                     first = new ParamType[firstParam.Length];
                     for (int i = 0; i < first.Length; i++)
                     {

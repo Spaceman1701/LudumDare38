@@ -139,7 +139,8 @@ namespace src {
                     GetComponentInParent<TerminalManager>().ShowCompilerError(e.Message);
                 } else
                 {
-                    GetComponent<TerminalManager>().ShowCompilerError("MALFORMED INSTRUCTION");
+                    GetComponentInParent<TerminalManager>().ShowCompilerError("MALFORMED INSTRUCTION");
+                    Debug.Log(e);
                 }
             }
         }
