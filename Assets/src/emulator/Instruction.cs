@@ -39,10 +39,10 @@ namespace src.emulator
             [Params("R,M")] DEC,
 
             //Halting instuctions
-            [Halt] [Params("R,M,N")] LOC,
-            [Halt] [Params("R,M")] SHA,
-            [Halt] [Params("")] TUL,
-            [Halt] [Params("")] TUR,
+            [Params("R,M,N")] LOC,
+            [Params("M")] SCA,
+            [Params("")] TUL,
+            [Params("")] TUR,
             [Halt] [Params("")] HLT,
 
             [Params("")] NOP,

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using src;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameLevel : Level {
 
@@ -23,5 +26,12 @@ public class GameLevel : Level {
     public override void Init()
     {
         Debug.Log("init level: " + name);
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    public override void ResetLevel()
+    {
+        Debug.Log("reset called");
+        GetComponentInChildren<PlayerController>().ForceReset();
     }
 }

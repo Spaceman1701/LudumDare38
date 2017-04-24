@@ -9,9 +9,9 @@ namespace src.emulator
         public delegate void ExternalInst(byte[] memory, byte[] registers, Program p, Instruction i);
 
         private const int AX = 0;
-        private const int BX = 0;
-        private const int CX = 0;
-        private const int DX = 0;
+        private const int BX = 1;
+        private const int CX = 2;
+        private const int DX = 3;
 
         private const byte GREATER_THAN = 2;
         private const byte EQUAL_TO = 1;
@@ -89,13 +89,12 @@ namespace src.emulator
 
         }
 
-        public void ExecuteSingleLine()
+        public bool ExecuteSingleLine()
         {
             Instruction i = p.GetLine(currentInst);
             nextInst = currentInst + 1;
             Debug.Log(i.OpType);
-            i = p.GetLine(currentInst);
-            nextInst = currentInst + 1;
+  
             if (i.OpType != Instruction.Type.NONE)
             {
                 if (methodDict.ContainsKey(i.OpType))
@@ -108,6 +107,8 @@ namespace src.emulator
                 }
             }
             currentInst = nextInst;
+
+            return !i.ShouldHalt();
         }
 
         private void AssignValue(byte value, Instruction.Parameter write)
@@ -312,7 +313,7 @@ namespace src.emulator
         public void Dec(Instruction i)
         {
             byte v = GetValue(i.ParamOne);
-            AssignValue((v--), i.ParamOne);
+            AssignValue((--v), i.ParamOne);
         }
 
         public void Hlt(Instruction i)

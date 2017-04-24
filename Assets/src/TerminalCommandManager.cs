@@ -12,9 +12,20 @@ public class TerminalCommandManager : MonoBehaviour {
         {
             InputField infield = GetComponent<InputField>();
             string command = infield.text.Trim();
-            last = command;
-            infield.text = "";
-            GetComponentInParent<TerminalManager>().InputCommand(command);
+            if (command.Length > 0)
+            {
+                last = command;
+                infield.text = "";
+                GetComponentInParent<TerminalManager>().InputCommand(command);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            GetComponent<InputField>().text = last;
         }
     }
 }

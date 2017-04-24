@@ -7,7 +7,7 @@ public abstract class Level : MonoBehaviour {
 
     public abstract void Finish();
     public abstract void Init();
-
+    public abstract void ResetLevel();
    
     
 }

@@ -40,6 +40,7 @@ namespace src{
                 mf.FixBadDesign(backup_text);
                 GetComponent<autoselection>().overrideSelect = true;
                 StartCoroutine(Reseleect());
+                EventSystem.current.SetSelectedGameObject(null);
             }
         }
 

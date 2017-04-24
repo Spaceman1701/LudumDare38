@@ -35,11 +35,16 @@ namespace src.emulator
 
         public Instruction GetLine(int i)
         {
+            if (i >= LineCount())
+            {
+                return new Instruction(Instruction.Type.NOP, null, null);
+            }
             return instructions[i];
         }
 
         public int EvaulateMemoryPtr(string ptr, byte[] registers)
         {
+            Debug.Log(ptr);
             Stack<byte> stack = new Stack<byte>();
             string[] exp = ptr.Split('|');
 
@@ -75,7 +80,8 @@ namespace src.emulator
 
         public int EvaluateRegisterName(string name)
         {
-            return registerNames[name];
+            Debug.Log(name);
+            return registerNames[name.ToLower()];
         }
 
         public byte EvaluateNumber(string number)
@@ -91,6 +97,7 @@ namespace src.emulator
 
         public int EvaluateLabel(string lbl)
         {
+            Debug.Log("label at: " + instructions[labels[lbl]].OpType);
             return labels[lbl];
         }
     }
