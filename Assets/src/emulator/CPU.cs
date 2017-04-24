@@ -58,6 +58,7 @@ namespace src.emulator
             memory = new byte[memory.Length];
             registers = new byte[registers.Length];
             currentInst = 0;
+            p = null;
         }
 
         public void LoadProgram(Program p)

@@ -23,6 +23,7 @@ public class TerminalManager : MonoBehaviour {
         Debug.Log(command);
         if (command == "run")
         {
+            GetComponent<Level>().ResetLevel();
             info.text = "INFO: Running program";
             RunCode();
         }

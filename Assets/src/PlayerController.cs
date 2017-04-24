@@ -25,6 +25,8 @@ namespace src {
         public byte TYPE_ROCK = 1;
         public byte TYPE_PORTAL = 2;
 
+        public int counter_max = 10;
+
         public int initalX;
         public int initalY;
         public Vector3 initalLoc;
@@ -126,7 +128,7 @@ namespace src {
                 Program p = Compiler.Compile(UNIVERSAL_MEM_HEADER + UNIVERSAL_CONST_HEADER + program, 5);
                 cpu.Reset();
                 cpu.LoadProgram(p);
-                counter = 0;
+                counter = counter_max;
                 running = true;
                 if (p == null)
                 {
@@ -236,7 +238,7 @@ namespace src {
                     {
                         Debug.Log("exec");
                         running = cpu.ExecuteSingleLine();
-                        counter = 10;
+                        counter = counter_max;
                         if (!running)
                         {
                             GetComponentInParent<TerminalManager>().ShowCodeHalt();
