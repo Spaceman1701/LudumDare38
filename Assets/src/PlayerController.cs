@@ -84,6 +84,39 @@ namespace src {
             int dist = DistanceToObject();
             Debug.Log("distance found: " + dist);
             mem[ptr] = (byte)dist;
+            int x = gridX;
+            int y = gridY;
+            switch (dir)
+            {
+                case 0:
+                    y += dist;
+                    break;
+                case 1:
+                    x += dist;
+                    break;
+                case 2:
+                    y -= dist;
+                    break;
+                case 3:
+                    x -= dist;
+                    break;
+            }
+            int int_type = TYPE_WALL;
+            if (map.grid[x, y] != null)
+            {
+                switch (map.grid[x, y].GetComponent<GridObject>().GetGridObjType())
+                {
+                    default:
+                        break;
+                    case TileMap.ObjectType.PORTAL:
+                        int_type = TYPE_PORTAL;
+                        break;
+                    case TileMap.ObjectType.ROCK:
+                        int_type = TYPE_ROCK;
+                        break;
+                }
+            }
+            mem[ptr + 1] = (byte)int_type;
         }
 
         public void LoadProgram(string program)
