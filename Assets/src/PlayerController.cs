@@ -6,11 +6,15 @@ using System;
 namespace src {
     public class PlayerController : MonoBehaviour, GridObject {
 
-        public const string UNIVERSAL_HEADER =
+        public const string UNIVERSAL_MEM_HEADER =
             ".data \n" +
             "DIR 0 \n" +
             "LOC 1 \n" +
-            "GOAL_LOC 3 \n" +
+            "GOAL_LOC 3 \n";
+        public const string UNIVERSAL_CONST_HEADER =
+            "T_WALL 0 \n" +
+            "T_ROCK 1 \n" +
+            "T_PORTAL 2 \n" +
             ".text \n";
 
         public byte MEMORY_DIR = 0;
@@ -84,7 +88,7 @@ namespace src {
 
         public void LoadProgram(string program)
         {
-            Program p = Compiler.Compile(UNIVERSAL_HEADER + program, 5);
+            Program p = Compiler.Compile(UNIVERSAL_MEM_HEADER + UNIVERSAL_CONST_HEADER + program, 5);
             cpu.Reset();
             cpu.LoadProgram(p);
             counter = 0;
