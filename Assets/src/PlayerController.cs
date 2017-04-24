@@ -121,10 +121,27 @@ namespace src {
 
         public void LoadProgram(string program)
         {
-            Program p = Compiler.Compile(UNIVERSAL_MEM_HEADER + UNIVERSAL_CONST_HEADER + program, 5);
-            cpu.Reset();
-            cpu.LoadProgram(p);
-            counter = 0;
+            try
+            {
+                Program p = Compiler.Compile(UNIVERSAL_MEM_HEADER + UNIVERSAL_CONST_HEADER + program, 5);
+                cpu.Reset();
+                cpu.LoadProgram(p);
+                counter = 0;
+                running = true;
+                if (p == null)
+                {
+                    throw new Exception();
+                }
+            } catch (Exception e)
+            {
+                if (e.GetType() == typeof(CompilerException))
+                {
+                    GetComponentInParent<TerminalManager>().ShowCompilerError(e.Message);
+                } else
+                {
+                    GetComponent<TerminalManager>().ShowCompilerError("MALFORMED INSTRUCTION");
+                }
+            }
         }
 
         public TileMap.ObjectType GetGridObjType()

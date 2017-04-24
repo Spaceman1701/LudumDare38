@@ -48,7 +48,6 @@ public class TerminalManager : MonoBehaviour {
 
         PlayerController pc = GetComponentInChildren<PlayerController>();
         pc.LoadProgram(toRun);
-        pc.running = true;
     }
 
     public void ShowRuntimeError()
@@ -59,5 +58,10 @@ public class TerminalManager : MonoBehaviour {
     public void ShowCodeHalt()
     {
         info.text = "INFO: HALT";
+    }
+
+    public void ShowCompilerError(string msg)
+    {
+        info.text = "ERROR: " + msg;
     }
 }

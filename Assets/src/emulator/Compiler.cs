@@ -15,6 +15,7 @@ namespace src.emulator
             public string paramOne;
             public string paramTwo;
 
+            public string fullLine;
 
             public TokenizedLine()
             {
@@ -22,6 +23,7 @@ namespace src.emulator
                 inst = Instruction.Type.NONE;
                 paramOne = null;
                 paramTwo = null;
+                fullLine = null;
             }
 
             public override string ToString()
@@ -79,10 +81,18 @@ namespace src.emulator
                 if (line.paramOne != null)
                 {
                     p1 = ParseParameter(line.paramOne);
+                    if (!line.inst.IsVaidParam(0, p1.type))
+                    {
+                        throw new CompilerException("BAD OPERAND 0 ::: " + line.fullLine);
+                    }
                 }
                 if (line.paramTwo != null)
                 {
                     p2 = ParseParameter(line.paramTwo);
+                    if (!line.inst.IsVaidParam(1, p2.type))
+                    {
+                        throw new CompilerException("BAD OPERAND 1 ::: " + line.fullLine);
+                    }
                 }
 
                 Instruction i = new Instruction(line.inst, p1, p2);
@@ -215,7 +225,9 @@ namespace src.emulator
                 {
                     if (currentLine.Trim() != "")
                     {
-                        tokenizedLines.Add(TokenizeLine(currentLine));
+                        TokenizedLine tokenized = TokenizeLine(currentLine);
+                        tokenized.fullLine = currentLine.Trim().Replace("~", "");
+                        tokenizedLines.Add(tokenized);
                     }
                 }
 
