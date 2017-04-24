@@ -202,6 +202,7 @@ namespace src.emulator
                         if (lineData[1].Contains('['))
                         {
                             string number = lineData[1].Replace("[", "").Replace("]", "");
+                            Debug.Log(number);
                             int value = int.Parse(number);
                             arrays[name] = heapHead;
                             heapHead += value;

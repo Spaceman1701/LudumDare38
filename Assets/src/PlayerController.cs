@@ -169,6 +169,7 @@ namespace src {
             {
                 running = false;
                 GetComponentInParent<TerminalManager>().ShowRuntimeError();
+                Debug.LogError(e);
             }
         }
 

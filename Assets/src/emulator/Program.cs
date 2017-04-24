@@ -86,6 +86,7 @@ namespace src.emulator
 
         public byte EvaluateNumber(string number)
         {
+            Debug.Log("parsing: " + number);
             if (constants.ContainsKey(number))
             {
                 return constants[number];
