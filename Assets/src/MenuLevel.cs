@@ -24,9 +24,6 @@ public class MenuLevel : Level {
 	
 	// Update is called once per frame
 	void Update () {
-	    if (Input.GetKeyDown(KeyCode.Return))
-        {
-            GetComponentInParent<LevelManager>().GoToNextLevel();
-        }
+
 	}
 }

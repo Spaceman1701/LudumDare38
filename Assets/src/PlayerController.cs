@@ -5,6 +5,14 @@ using System;
 
 namespace src {
     public class PlayerController : MonoBehaviour, GridObject {
+
+        public const string UNIVERSAL_HEADER =
+            ".data \n" +
+            "DIR 0 \n" +
+            "LOC 1 \n" +
+            "GOAL_LOC 3 \n" +
+            ".text \n";
+
         public byte MEMORY_DIR = 0;
         public byte LOC = 1; //2
         public byte GOAL_LOC = 3;
@@ -37,6 +45,12 @@ namespace src {
         void Start() {
             cpuInst = new Dictionary<Instruction.Type, CPU.ExternalInst>();
             cpuInst[Instruction.Type.LOC] = Loc;
+
+            cpuInst[Instruction.Type.TUR] = Tur;
+            cpuInst[Instruction.Type.TUL] = Tul;
+
+            cpuInst[Instruction.Type.SCA] = Sca;
+
             cpu = new CPU(64, 4, cpuInst);
         }
 
@@ -57,19 +71,20 @@ namespace src {
         public void Tur(byte[] mem, byte[] regs, Program p, Instruction i)
         {
             TurnRight();
-            mem[1] = (byte)dir;
+            mem[0] = (byte)dir;
         }
 
         public void Sca(byte[] mem, byte[] regs, Program p, Instruction i)
         {
             int ptr = p.EvaulateMemoryPtr(i.ParamOne.data, regs);
             int dist = DistanceToObject();
+            Debug.Log("distance found: " + dist);
             mem[ptr] = (byte)dist;
         }
 
         public void LoadProgram(string program)
         {
-            Program p = Compiler.Compile(program);
+            Program p = Compiler.Compile(UNIVERSAL_HEADER + program, 5);
             cpu.Reset();
             cpu.LoadProgram(p);
             counter = 0;
@@ -89,6 +104,8 @@ namespace src {
             initalY = gridY;
 
             initalLoc = transform.localPosition;
+
+            map.grid[x, y] = null;
         }
 
         public void ForceReset()
@@ -98,7 +115,10 @@ namespace src {
 
             transform.localPosition = initalLoc;
             running = false;
-            cpu.Reset();
+            if (cpu != null)
+            {
+                cpu.Reset();
+            }
         }
 
 
@@ -121,7 +141,7 @@ namespace src {
             {
                 Move(3);
             }
-            if (dir == 1 && Input.GetKeyDown(KeyCode.RightArrow) && gridX < map.width - 1 && IsPassable(gridX + 1, gridY))
+            if (dir == 1 && gridX < map.width - 1 && IsPassable(gridX + 1, gridY))
             {
                 Move(1);
             }
@@ -129,8 +149,12 @@ namespace src {
 
         // Update is called once per frame
         void Update() {
-            int oldX = gridX;
-            int oldY = gridY;
+            cpu.memory[LOC] = (byte)gridX;
+            cpu.memory[LOC + 1] = (byte)gridY;
+
+            cpu.memory[GOAL_LOC] = (byte)map.GetGoalX();
+            cpu.memory[GOAL_LOC + 1] = (byte)map.GetGoalY();
+
             if (Input.GetKeyDown(KeyCode.UpArrow) && gridY < map.height - 1 && IsPassable(gridX, gridY + 1))
             {
                 //Move(0);
@@ -147,8 +171,8 @@ namespace src {
             {
                 //Move(1);
             }
-            UpdateGridLocation(oldX, oldY);
             CheckAtGoal();
+
             try
             {
                 if (running)
@@ -157,7 +181,7 @@ namespace src {
                     {
                         Debug.Log("exec");
                         running = cpu.ExecuteSingleLine();
-                        counter = 20;
+                        counter = 10;
                         if (!running)
                         {
                             GetComponentInParent<TerminalManager>().ShowCodeHalt();
@@ -175,8 +199,10 @@ namespace src {
 
         void CheckAtGoal()
         {
+            Debug.Log(map.IsObjectAt(gridX, gridY));
             if (map.IsObjectAt(gridX, gridY) == TileMap.ObjectType.PORTAL)
             {
+                Debug.Log("At the fucking goal");
                 GetComponentInParent<LevelManager>().GoToNextLevel();
             }
         }
@@ -185,12 +211,14 @@ namespace src {
         {
             dir -= 1;
             dir %= 4;
+            transform.Rotate(new Vector3(0, 0, 90));
         }
 
         void TurnRight()
         {
             dir += 1;
             dir %= 4;
+            transform.Rotate(new Vector3(0, 0, -90));
         }
 
         void Move(int dir)
@@ -219,11 +247,6 @@ namespace src {
         int DistanceToObject()
         {
             return map.Raycast(gridX, gridY, dir);
-        }
-
-        void UpdateGridLocation(int oldX, int oldY)
-        {
-            map.grid[oldX, oldY] = null;
         }
     }
 }

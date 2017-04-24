@@ -67,6 +67,7 @@ namespace src
         // Update is called once per frame
         void Update()
         {
+            Debug.Log("Grid: " + IsObjectAt(10, 19));
         }
 
         public ObjectType IsObjectAt(int x, int y)
@@ -106,13 +107,50 @@ namespace src
             }
             int x = startx + delx, y = starty + dely;
             int steps = 1;
-            while (IsObjectAt(x, y) != ObjectType.NULL)
+            while (IsObjectAt(x, y) == ObjectType.NULL)
             {
                 x += delx;
                 y += dely;
                 steps++;
             }
+            Debug.Log(IsObjectAt(x, y));
             return steps;
+        }
+
+        public int GetGoalX()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (grid[i, j] != null)
+                    {
+                        if (grid[i, j].GetComponent<GridObject>().GetGridObjType() == ObjectType.PORTAL)
+                        {
+                            return i;
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
+        public int GetGoalY()
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (grid[i, j] != null)
+                    {
+                        if (grid[i, j].GetComponent<GridObject>().GetGridObjType() == ObjectType.PORTAL)
+                        {
+                            return j;
+                        }
+                    }
+                }
+            }
+            return -1;
         }
     }
 }

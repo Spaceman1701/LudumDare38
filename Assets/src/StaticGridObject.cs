@@ -10,6 +10,8 @@ namespace src
     {
         public TileMap.ObjectType type;
 
+        public int gridX;
+        public int gridY;
 
         public TileMap.ObjectType GetGridObjType()
         {
@@ -18,6 +20,8 @@ namespace src
 
         public void SetLocation(int x, int y)
         {
+            gridX = x;
+            gridY = y;
         }
     }
 }

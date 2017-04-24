@@ -48,6 +48,7 @@ namespace src.emulator
             [Params("")] NOP,
 
             [Params("")] NONE,
+            [Params("R,N,M")] DBG
         }
 
         public enum ParamType

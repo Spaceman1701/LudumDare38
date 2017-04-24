@@ -142,6 +142,23 @@ namespace src.emulator
          * INSTRUCTION IMPLEMETNATIONS
          * */
 
+        public void Dbg(Instruction i)
+        {
+            Instruction.Parameter pr = i.ParamOne;
+            if (pr.type == Instruction.ParamType.REG)
+            {
+                Debug.Log("DBG REG: " + registers[p.EvaluateRegisterName(pr.data)]);
+            }
+            if (pr.type == Instruction.ParamType.MEM)
+            {
+                Debug.Log("DBG PTR: " + p.EvaulateMemoryPtr(pr.data, registers));
+            }
+            if (pr.type == Instruction.ParamType.NUM)
+            {
+                Debug.Log("DBG MEM: " + memory[p.EvaluateNumber(pr.data)]);
+            }
+        }
+
         public void Mov(Instruction i)
         {
             AssignValue(GetValue(i.ParamTwo), i.ParamOne);

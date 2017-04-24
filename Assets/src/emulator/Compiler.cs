@@ -47,9 +47,9 @@ namespace src.emulator
         private Compiler() { }
 
 
-        public static Program Compile(string code)
+        public static Program Compile(string code, int reservedMemory)
         {
-            TokenizedProgram p = PreProcess(code);
+            TokenizedProgram p = PreProcess(code, reservedMemory);
             foreach (TokenizedLine l in p.instructions)
             {
                 Debug.Log(l.ToString());
@@ -148,7 +148,7 @@ namespace src.emulator
             }
         }
 
-        private static TokenizedProgram PreProcess(string raw)
+        private static TokenizedProgram PreProcess(string raw, int reversedMemory)
         {
             string[] lines = raw.Split('\n');
             bool dataSection = false;
@@ -178,7 +178,7 @@ namespace src.emulator
                 lines[i] = line;
             }
 
-            int heapHead = 0;
+            int heapHead = reversedMemory;
             for (int i = 0; i < lines.Length; i++)
             {
                 string currentLine = lines[i];

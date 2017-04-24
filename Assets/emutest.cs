@@ -18,7 +18,7 @@ public class emutest : MonoBehaviour {
             "b: hlt \n" +
             "mov %ax, $17";
 
-        Program p = Compiler.Compile(program);
+        Program p = Compiler.Compile(program, 0);
 
         CPU cpu = new CPU(256, 4, new Dictionary<Instruction.Type, CPU.ExternalInst>());
 
