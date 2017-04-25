@@ -25,7 +25,7 @@ namespace src {
         public byte TYPE_ROCK = 1;
         public byte TYPE_PORTAL = 2;
 
-        public int counter_max = 10;
+        public int counter_max = 7;
 
         public int initalX;
         public int initalY;
@@ -40,7 +40,7 @@ namespace src {
         public int gridX;
         public int gridY;
 
-        public int dir;
+        public byte dir;
 
         public CPU cpu;
 
@@ -64,7 +64,17 @@ namespace src {
 
         public void Loc(byte[] mem, byte[] regs, Program p, Instruction i)
         {
-            byte dir = p.EvaluateNumber(i.ParamOne.data);
+            byte dir = 0;
+            if (i.ParamOne.type == Instruction.ParamType.NUM)
+            {
+                dir = p.EvaluateNumber(i.ParamOne.data);
+            } else if (i.ParamOne.type == Instruction.ParamType.REG)
+            {
+                dir = regs[p.EvaluateRegisterName(i.ParamOne.data)];
+            } else if (i.ParamOne.type == Instruction.ParamType.MEM)
+            {
+                dir = mem[p.EvaulateMemoryPtr(i.ParamOne.data, regs)];
+            }
             SafeMove(dir);
             mem[1] = (byte)gridX;
             mem[2] = (byte)gridY;
