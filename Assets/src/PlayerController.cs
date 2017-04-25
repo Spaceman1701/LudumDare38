@@ -29,7 +29,9 @@ namespace src {
 
         public int initalX;
         public int initalY;
+
         public Vector3 initalLoc;
+        public Quaternion initalRot;
 
         public TileMap map;
 
@@ -160,7 +162,9 @@ namespace src {
             initalX = gridX;
             initalY = gridY;
 
-            initalLoc = transform.localPosition;
+
+            initalLoc = transform.position;
+            initalRot = transform.rotation;
 
             map.grid[x, y] = null;
         }
@@ -170,7 +174,11 @@ namespace src {
             gridX = initalX;
             gridY = initalY;
 
-            transform.localPosition = initalLoc;
+            transform.position = initalLoc;
+            transform.rotation = initalRot;
+
+            dir = 0;
+
             running = false;
             if (cpu != null)
             {
@@ -206,6 +214,8 @@ namespace src {
 
         // Update is called once per frame
         void Update() {
+            cpu.memory[MEMORY_DIR] = (byte)dir;
+
             cpu.memory[LOC] = (byte)gridX;
             cpu.memory[LOC + 1] = (byte)gridY;
 

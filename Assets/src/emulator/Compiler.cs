@@ -77,6 +77,10 @@ namespace src.emulator
 
             foreach (TokenizedLine line in p.instructions)
             {
+                if (line.inst == Instruction.Type.NONE)
+                {
+                    throw new CompilerException("BAD INSTRUCTION ::: " + line.fullLine);
+                }
                 Instruction.Parameter p1 = null, p2 = null;
                 if (line.paramOne != null)
                 {
