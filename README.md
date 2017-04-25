@@ -3,7 +3,7 @@ A game about writing real assembly to control a space rover. Created in 72 hours
 
 Program the rover in the uP-8 instruction set featuring 28 instructions. Includes a 20 page Assembly Language Reference Guide.
 
-[DOWNLOAD] (https://schmaron.itch.io/up-8)
+Download at: https://schmaron.itch.io/up-8
 
 **Credits**
 
