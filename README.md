@@ -14,3 +14,5 @@ Game Design: Ethan Hunter, Aaron Aaeng
 Art: Kevin Yang
 
 Writing: Aaron Aaeng, Ethan Hunter
+
+The terminal font is ModeSeven by Andrew Bulhak, which you get download here: http://www.fontspace.com/andrew-bulhak/modeseven.
