@@ -5,6 +5,7 @@ public class LevelManager : MonoBehaviour {
 
 
     public Level firstLevel;
+    public Level LastLevel;
 
     public Level mainMenu;
     public Level helpScreen;
@@ -34,6 +35,7 @@ public class LevelManager : MonoBehaviour {
     public void GoToLevel(Level level)
     {
         currentLevel.Finish();
+        LastLevel = currentLevel;
         currentLevel.gameObject.SetActive(false);
         level.gameObject.SetActive(true);
         level.Init();
@@ -53,5 +55,16 @@ public class LevelManager : MonoBehaviour {
     public void GoToHelp()
     {
         GoToLevel(helpScreen);
+    }
+
+    public void GoToPrevious()
+    {
+        if (LastLevel != null)
+        {
+            GoToLevel(LastLevel);
+        } else
+        {
+            GoToMainMenu();
+        }
     }
 }

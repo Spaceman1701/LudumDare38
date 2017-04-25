@@ -7,10 +7,14 @@ using UnityEngine.EventSystems;
 
 public class GameLevel : Level {
 
-    public int name;
+    public string prefix = "TEST: ";
+
+    public Text header;
+
+    public string name;
 	// Use this for initialization
 	void Start () {
-	
+        header.text = prefix + name;
 	}
 	
 	// Update is called once per frame
