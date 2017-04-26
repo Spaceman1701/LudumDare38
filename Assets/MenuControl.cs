@@ -11,7 +11,7 @@ public class MenuControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+        //Screen.fullScreen = true;
 	}
 	
 	// Update is called once per frame
