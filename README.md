@@ -1,5 +1,5 @@
 # LudumDare38
-A game about writing real assembly to control a space rover. Created in 72 hours for Ludum Dare 38. 
+A game about writing real assembly to control a space rover. Created in 72 hours for Ludum Dare 38. This is the post-jam branch, which will include fixes and new features
 
 Program the rover in the uP-8 instruction set featuring 28 instructions. Includes a 20 page Assembly Language Reference Guide.
 
