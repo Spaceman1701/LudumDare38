@@ -113,14 +113,11 @@ public class GridMap : MonoBehaviour {
 #if UNITY_EDITOR
     public void BuildMap()
     {
-        Debug.Log("building map");
-
         for (int x = 0; x < 20; x++)
         {
             for (int y = 0; y < 30; y++)
             {
                 Color c = mapImage.GetPixel(x, y);
-                Debug.Log(c);
                 if (c == Color.black)
                 {
                     GameObject wall = Instantiate(wallPrefab);
@@ -136,6 +133,7 @@ public class GridMap : MonoBehaviour {
                     GameObject player = Instantiate(playerPrefab);
                     player.transform.parent = transform;
                     player.transform.localPosition = new Vector3(x + xoffset, y + yoffset, transform.position.z);
+                    player.GetComponent<PlayerController>().map = this;
                 }
             }
         }
@@ -146,8 +144,7 @@ public class GridMap : MonoBehaviour {
     {
         foreach (Transform mb in GetComponentsInChildren<Transform>())
         {
-            Debug.Log(mb.gameObject);
-            if (mb.gameObject != gameObject)
+            if (mb != null && mb.gameObject != gameObject)
             {
                 GameObject.DestroyImmediate(mb.gameObject);
             }

@@ -14,6 +14,8 @@ public class LevelManager : MonoBehaviour {
 
     public Level currentLevel;
 
+    public Camera sceneCamera;
+
 	// Use this for initialization
 	void Start () {
         levels = GetComponentsInChildren<Level>();
@@ -24,6 +26,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         firstLevel.gameObject.SetActive(true);
+        sceneCamera.transform.position = new Vector3(firstLevel.transform.position.x, firstLevel.transform.position.y, -1);
         currentLevel = firstLevel;
     }
 	
@@ -39,6 +42,7 @@ public class LevelManager : MonoBehaviour {
         currentLevel.gameObject.SetActive(false);
         level.gameObject.SetActive(true);
         level.Init();
+        sceneCamera.transform.position = new Vector3(level.transform.position.x, level.transform.position.y, -1);
         currentLevel = level;
     }
 
