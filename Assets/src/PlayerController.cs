@@ -6,6 +6,8 @@ using System;
 namespace src {
     public class PlayerController : GridObject {
 
+        public GameObject sprite;
+
         public const string UNIVERSAL_MEM_HEADER =
             ".data \n" +
             "DIR 0 \n" +
@@ -174,7 +176,7 @@ namespace src {
 
 
             initalLoc = transform.position;
-            initalRot = transform.rotation;
+            initalRot = sprite.transform.rotation;
 
             map.grid[x, y] = null;
         }
@@ -185,7 +187,7 @@ namespace src {
             gridY = initalY;
 
             transform.position = initalLoc;
-            transform.rotation = initalRot;
+            sprite.transform.rotation = initalRot;
 
             dir = 0;
 
@@ -289,14 +291,14 @@ namespace src {
         {
             dir -= 1;
             dir %= 4;
-            transform.Rotate(new Vector3(0, 0, 90));
+            sprite.transform.Rotate(new Vector3(0, 0, 90));
         }
 
         void TurnRight()
         {
             dir += 1;
             dir %= 4;
-            transform.Rotate(new Vector3(0, 0, -90));
+            sprite.transform.Rotate(new Vector3(0, 0, -90));
         }
 
         void Move(int dir)
