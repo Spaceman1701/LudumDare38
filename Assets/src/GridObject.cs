@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace src
 {
-    public interface GridObject
+    public abstract class GridObject : MonoBehaviour
     {
-        void SetLocation(int x, int y);
-        TileMap.ObjectType GetGridObjType();
+        public abstract void SetLocation(int x, int y);
+        public abstract GridMap.ObjectType GetGridObjType();
     }
 }

@@ -6,7 +6,13 @@ public class TerminalCommandManager : MonoBehaviour {
 
     public string last;
 
-	public void HandleCommand()
+    public LevelManager levelManager;
+
+    void Start()
+    {
+    }
+
+    public void HandleCommand()
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
@@ -16,7 +22,7 @@ public class TerminalCommandManager : MonoBehaviour {
             {
                 last = command;
                 infield.text = "";
-                GetComponentInParent<TerminalManager>().InputCommand(command.ToLower());
+                levelManager.currentLevel.GetComponentInChildren<GameLevel>().GetTerminalManager().InputCommand(command.ToLower());
             }
         }
     }

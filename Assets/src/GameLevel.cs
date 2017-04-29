@@ -11,6 +11,8 @@ public class GameLevel : Level {
 
     public Text header;
 
+    public TerminalManager terminalManger;
+
     public string name;
 	// Use this for initialization
 	void Start () {
@@ -21,6 +23,11 @@ public class GameLevel : Level {
 	void Update () {
 	
 	}
+
+    public TerminalManager GetTerminalManager()
+    {
+        return terminalManger;
+    }
 
     public override void Finish()
     {

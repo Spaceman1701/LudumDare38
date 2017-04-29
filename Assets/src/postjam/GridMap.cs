@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using src;
 
 public class GridMap : MonoBehaviour {
-
+#if UNITY_EDITOR
     public Texture2D mapImage;
-
+#endif
     public GameObject wallPrefab;
     public GameObject playerPrefab;
     public GameObject portalPrefab;
@@ -13,11 +14,23 @@ public class GridMap : MonoBehaviour {
     public int xoffset = -20;
     public int yoffset = -15;
 
-    public int[,] grid;
+    public int width = 20;
+    public int height = 30;
 
-	// Use this for initialization
-	void Start () {
+    public int goalX;
+    public int goalY;
 
+    public GridObject[,] grid;
+
+    public enum ObjectType
+    {
+        NULL, WALL, ROCK, PORTAL, PLAYER
+    }
+
+    // Use this for initialization
+    void Start () {
+        grid = new GridObject[width, height];
+        BuildGrid();
 	}
 	
 	// Update is called once per frame
@@ -25,6 +38,79 @@ public class GridMap : MonoBehaviour {
 	
 	}
 
+    public void BuildGrid()
+    {
+        Debug.Log("building grid");
+        foreach (GridObject go in GetComponentsInChildren<GridObject>())
+        {
+            Vector3 location = go.gameObject.transform.localPosition;
+            int gridX = (int)location.x - xoffset;
+            int gridY = (int)location.y - yoffset;
+            Debug.Log(go.gameObject + ", " + gridX + ", " + gridY);
+            grid[gridX, gridY] = go;
+            go.SetLocation(gridX, gridY);
+        }
+    }
+
+    public ObjectType GetObjectAt(int x, int y)
+    {
+        if (x >= width || x < 0 || y >= height || y < 0 || grid[x, y] == null)
+        {
+            return ObjectType.NULL;
+        }
+        return grid[x, y].GetGridObjType();
+    }
+
+
+    public int GetGoalX()
+    {
+        return goalX;
+    }
+
+    public int GetGoalY()
+    {
+        return goalY;
+    }
+
+    public int Raycast(int startx, int starty, int dir)
+    {
+        if (dir < 0 || dir > 3)
+        {
+            return 0;
+        }
+        int delx = 0, dely = 0;
+        switch (dir)
+        {
+            case 0:
+                delx = 0;
+                dely = 1;
+                break;
+            case 1:
+                delx = 1;
+                dely = 0;
+                break;
+            case 2:
+                delx = 0;
+                dely = -1;
+                break;
+            case 3:
+                delx = -1;
+                dely = 0;
+                break;
+        }
+        int x = startx + delx, y = starty + dely;
+        int steps = 1;
+        while (GetObjectAt(x, y) == ObjectType.NULL)
+        {
+            x += delx;
+            y += dely;
+            steps++;
+        }
+        Debug.Log(GetObjectAt(x, y));
+        return steps;
+    }
+
+#if UNITY_EDITOR
     public void BuildMap()
     {
         Debug.Log("building map");
@@ -54,6 +140,7 @@ public class GridMap : MonoBehaviour {
             }
         }
     }
+#endif
 
     public void ClearMap()
     {

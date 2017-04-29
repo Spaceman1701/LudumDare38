@@ -6,19 +6,19 @@ using UnityEngine;
 
 namespace src
 {
-    class StaticGridObject : MonoBehaviour, GridObject
+    class StaticGridObject : GridObject
     {
-        public TileMap.ObjectType type;
+        public GridMap.ObjectType type;
 
         public int gridX;
         public int gridY;
 
-        public TileMap.ObjectType GetGridObjType()
+        public override GridMap.ObjectType GetGridObjType()
         {
             return type;
         }
 
-        public void SetLocation(int x, int y)
+        public override void SetLocation(int x, int y)
         {
             gridX = x;
             gridY = y;

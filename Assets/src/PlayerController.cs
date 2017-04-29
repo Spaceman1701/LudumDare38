@@ -4,7 +4,7 @@ using src.emulator;
 using System;
 
 namespace src {
-    public class PlayerController : MonoBehaviour, GridObject {
+    public class PlayerController : GridObject {
 
         public const string UNIVERSAL_MEM_HEADER =
             ".data \n" +
@@ -33,7 +33,7 @@ namespace src {
         public Vector3 initalLoc;
         public Quaternion initalRot;
 
-        public TileMap map;
+        public GridMap map;
 
         public float unitsToMove;
 
@@ -122,10 +122,10 @@ namespace src {
                 {
                     default:
                         break;
-                    case TileMap.ObjectType.PORTAL:
+                    case GridMap.ObjectType.PORTAL:
                         int_type = TYPE_PORTAL;
                         break;
-                    case TileMap.ObjectType.ROCK:
+                    case GridMap.ObjectType.ROCK:
                         int_type = TYPE_ROCK;
                         break;
                 }
@@ -159,12 +159,12 @@ namespace src {
             }
         }
 
-        public TileMap.ObjectType GetGridObjType()
+        public override GridMap.ObjectType GetGridObjType()
         {
-            return TileMap.ObjectType.PLAYER;
+            return GridMap.ObjectType.PLAYER;
         }
 
-        public void SetLocation(int x, int y)
+        public override void SetLocation(int x, int y)
         {
             gridX = x;
             gridY = y;
@@ -199,7 +199,7 @@ namespace src {
 
         bool IsPassable(int x, int y)
         {
-            return map.IsObjectAt(x, y) != TileMap.ObjectType.WALL && map.IsObjectAt(x, y) != TileMap.ObjectType.ROCK;
+            return map.GetObjectAt(x, y) != GridMap.ObjectType.WALL && map.GetObjectAt(x, y) != GridMap.ObjectType.ROCK;
         }
 
         void SafeMove(int dir)
@@ -276,8 +276,8 @@ namespace src {
 
         void CheckAtGoal()
         {
-            Debug.Log(map.IsObjectAt(gridX, gridY));
-            if (map.IsObjectAt(gridX, gridY) == TileMap.ObjectType.PORTAL)
+            Debug.Log(map.GetObjectAt(gridX, gridY));
+            if (map.GetObjectAt(gridX, gridY) == GridMap.ObjectType.PORTAL)
             {
                 Debug.Log("At the fucking goal");
                 GetComponentInParent<Level>().ResetLevel();
@@ -326,5 +326,6 @@ namespace src {
         {
             return map.Raycast(gridX, gridY, dir);
         }
+
     }
 }
