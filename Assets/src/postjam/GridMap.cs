@@ -47,7 +47,10 @@ public class GridMap : MonoBehaviour {
             int gridX = (int)location.x - xoffset;
             int gridY = (int)location.y - yoffset;
             Debug.Log(go.gameObject + ", " + gridX + ", " + gridY);
-            grid[gridX, gridY] = go;
+            if (go.GetGridObjType() != ObjectType.PLAYER)
+            {
+                grid[gridX, gridY] = go;
+            }
             go.SetLocation(gridX, gridY);
         }
     }

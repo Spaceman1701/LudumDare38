@@ -62,6 +62,8 @@ namespace src {
             cpuInst[Instruction.Type.SCA] = Sca;
 
             cpu = new CPU(64, 4, cpuInst);
+
+            map = GetComponentInParent<GridMap>();
         }
 
         public void Loc(byte[] mem, byte[] regs, Program p, Instruction i)
@@ -177,8 +179,6 @@ namespace src {
 
             initalLoc = transform.position;
             initalRot = sprite.transform.rotation;
-
-            map.grid[x, y] = null;
         }
 
         public void ForceReset()
