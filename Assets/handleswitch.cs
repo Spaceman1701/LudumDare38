@@ -13,7 +13,15 @@ namespace src{
         // Use this for initialization
         void Start()
         {
+            LoadAutoSave();
+        }
 
+        public void LoadAutoSave()
+        {
+            if (CodeCache.Instance.IsSavedCode(CodeCache.AUTO_SAVE))
+            {
+                code.text = CodeCache.Instance.GetSavedCode(CodeCache.AUTO_SAVE);
+            }
         }
 
         // Update is called once per frame
@@ -33,6 +41,7 @@ namespace src{
 
         public void SwitchEditors()
         {
+            CodeCache.Instance.SaveCode(CodeCache.AUTO_SAVE, code.text); 
             if (Input.GetKey(KeyCode.Escape))
             {
                 string backup_text = GetComponentInChildren<Text>().text;
